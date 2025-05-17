@@ -13,6 +13,7 @@ async function init() {
 init();
 
 module.exports = {
+  Post,
   User, // export the model
   // also export any extra models here
 };
