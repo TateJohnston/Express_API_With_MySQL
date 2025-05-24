@@ -1,8 +1,8 @@
 "use strict";
 const Models = require("../models");
 
-const getUsers = (res) => {
-  Models.User.findAll({})
+const getComments = (res) => {
+  Models.Comment.findAll({})
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -12,8 +12,8 @@ const getUsers = (res) => {
     });
 };
 
-const createUser = (data, res) => {
-  Models.User.create(data)
+const createComment = (data, res) => {
+  Models.Comment.create(data)
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -23,8 +23,8 @@ const createUser = (data, res) => {
     });
 };
 
-const updateUser = (req, res) => {
-  Models.User.update(req.body, {
+const updateComment = (req, res) => {
+  Models.Comment.update(req.body, {
     where: { id: req.params.id },
     returning: true,
   })
@@ -36,9 +36,8 @@ const updateUser = (req, res) => {
       res.send({ result: 500, error: err.message });
     });
 };
-
-const deleteUser = (req, res) => {
-  Models.User.destroy({ where: { id: req.params.id } })
+const deleteComment = (req, res) => {
+  Models.Comment.destroy({ where: { id: req.params.id } })
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -47,9 +46,10 @@ const deleteUser = (req, res) => {
       res.send({ result: 500, error: err.message });
     });
 };
+
 module.exports = {
-  getUsers,
-  createUser,
-  updateUser,
-  deleteUser,
+  getComments,
+  createComment,
+  updateComment,
+  deleteComment,
 };

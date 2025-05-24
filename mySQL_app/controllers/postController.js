@@ -1,6 +1,7 @@
 "use strict";
+const { where } = require("sequelize");
 const Models = require("../models");
-// finds all users in DB, then sends array as response
+
 const getPosts = (res) => {
   Models.Post.findAll({})
     .then((data) => {
@@ -11,7 +12,7 @@ const getPosts = (res) => {
       res.send({ result: 500, error: err.message });
     });
 };
-// uses JSON from request body to create new user in DB
+
 const createPost = (data, res) => {
   Models.Post.create(data)
     .then((data) => {
@@ -38,8 +39,9 @@ const updatePost = (req, res) => {
 };
 
 const incrementLike = (req, res) => {
-  Models.Post.update(req.body, {
-    where: { id: req.params.id },
+  const postId = req.params.id;
+  Models.Post.increment("likes", {
+    where: { id: postId },
     returning: true,
   })
     .then((data) => {
@@ -51,9 +53,41 @@ const incrementLike = (req, res) => {
     });
 };
 
-// deletes user matching ID from params
 const deletePost = (req, res) => {
   Models.Post.destroy({ where: { id: req.params.id } })
+    .then((data) => {
+      res.send({ result: 200, data: data });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ result: 500, error: err.message });
+    });
+};
+
+const postView = (req, res) => {
+  let postId = req.params.postId;
+  Models.Post.findOne({
+    where: { id: postId },
+
+    attributes: ["title", "description", "createdAt", "likes"],
+    include: [
+      {
+        model: Models.User,
+        attributes: ["firstName", "lastName"],
+      },
+      {
+        model: Models.Comment,
+        attributes: ["comment", "createdAt", "updatedAt"],
+        include: [
+          {
+            model: Models.User,
+            as: "commenter",
+            attributes: ["firstName", "lastName"],
+          },
+        ],
+      },
+    ],
+  })
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -69,4 +103,5 @@ module.exports = {
   updatePost,
   incrementLike,
   deletePost,
+  postView,
 };

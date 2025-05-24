@@ -1,19 +1,23 @@
 "use strict";
-const User = require("./user"); //require the model
+const User = require("./user");
 const Post = require("./post");
+const Comment = require("./comment");
+
+User.hasMany(Post, { foreignKey: "userID" });
+Post.belongsTo(User, { foreignKey: "userID" });
+Post.hasMany(Comment, { foreignKey: "postId" });
+Comment.belongsTo(User, { foreignKey: "userID", as: "commenter" });
 
 async function init() {
-  await User.sync(); // sync the model
-  // also sync any extra models here
+  await User.sync();
+  await Post.sync();
+  await Comment.sync();
 }
-async function init() {
-  await Post.sync(); // sync the model
-  // also sync any extra models here
-}
+
 init();
 
 module.exports = {
   Post,
-  User, // export the model
-  // also export any extra models here
+  User,
+  Comment,
 };

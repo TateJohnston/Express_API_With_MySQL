@@ -1,43 +1,36 @@
 const { DataTypes, Model } = require("sequelize");
 let dbConnect = require("../dbConnect");
 const sequelizeInstance = dbConnect.Sequelize;
-class Post extends Model {}
+class Comment extends Model {}
 
-Post.init(
+Comment.init(
   {
-    id: {
+    postId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
+      references: {
+        model: "posts",
+        value: "id",
+      },
     },
-    title: {
+    comment: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    imageUrl: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
-    likes: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
     userID: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
     },
   },
   {
     sequelize: sequelizeInstance,
-    modelName: "posts",
+    modelName: "comments",
     timestamps: true,
     freezeTableName: true,
   }
 );
-module.exports = Post;
+module.exports = Comment;

@@ -2,7 +2,7 @@ const { DataTypes, Model } = require("sequelize");
 let dbConnect = require("../dbConnect");
 const sequelizeInstance = dbConnect.Sequelize;
 class User extends Model {}
-// Sequelize will create this table if it doesn't exist on startup
+
 User.init(
   {
     id: {
@@ -31,7 +31,7 @@ User.init(
   },
   {
     sequelize: sequelizeInstance,
-    modelName: "users", // use lowercase plural format
+    modelName: "users",
     timestamps: true,
     freezeTableName: true,
   }
